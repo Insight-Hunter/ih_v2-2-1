@@ -91,31 +91,39 @@ name = "insight-hunter-api-dev"
 name = "insight-hunter-api-prod"
 
 [[d1_databases]]
-binding = "DB"
-database_name = "insight-hunter-db"
-database_id = "your-database-id-here"
+binding = "IH_DB"
+database_name = "insight-hunter-v2"
+database_id = "708836ad-602f-4f95-a6b5-cd31a7cd188d"
 
 [[kv_namespaces]]
-binding = "CACHE"
-id = "your-kv-namespace-id"
+binding = "KV"
+id = "5d547bc308d1445d960d19636c589923"
 
 [[r2_buckets]]
-binding = "DOCUMENTS"
-bucket_name = "insight-hunter-docs"
+binding = "R2"
+bucket_name = "insight-hunter-exports"
 
 [ai]
 binding = "AI"
 
 [vars]
-JWT_SECRET = "your-super-secret-jwt-key-change-this-in-production"
+JWT_SECRET = "8cb92eb311e1a8106f160b1d41958078c7e5be5225917cdcd5b2115975af18c1c76c12c62ae9a3859d358ea7a18b862697c3c9bc996505d5e0a55b575f79"
+
 ENVIRONMENT = "development"
-OPENAI_API_KEY = "your-openai-api-key"
-PLAID_CLIENT_ID = "your-plaid-client-id"
-PLAID_SECRET = "your-plaid-secret-key"
+
+OPENAI_API_KEY = "sk-proj-9h6khbcJhSMHwMhw1N0T-gmfaEEbbdsGWh5e5bBa1jNMwUJ3Hd1mWaj00eSaKb9Gf5lBOuaGT38bKf1JnVwQvtA1IG7cVqLsIXIyMKiWI178E9WgL4t8vxtMA"
+
+PLAID_CLIENT_ID = "68c4bf58255d5b8de239ce6f7"
+
+PLAID_CLIENT_SECRET = "71236a6ba659d29971e0c5d7a5c5c1"
+
 PLAID_ENV = "sandbox"
-QUICKBOOKS_CLIENT_ID = "your-qb-client-id"
-QUICKBOOKS_CLIENT_SECRET = "your-qb-client-secret"
-EOF
+
+QUICKBOOKS_CLIENT_ID = "ABP57Aep1BnfaoU2qFJ3mNfyl6WDdMQYMk7aLshCWXK8Xoqso"
+
+QUICKBOOKS_CLIENT_SECRET = "rLk0P87lmbgcv6GY1W3uJyXveBhpeTzwMxs8omT"
+
+EOF  
 
 # Backend TypeScript Configuration
 cat > backend/tsconfig.json << 'EOF'
@@ -817,3 +825,53 @@ export default App;
 EOF
 
 # Store Configuration
+
+# ==========================================
+# ENVIRONMENT SETUP
+# ==========================================
+
+echo -e "${BLUE}Creating .env.example files for backend and frontend...${NC}"
+
+# Install cpy-cli globally so setup:env works immediately
+npm install -g cpy-cli
+
+# Backend .env.example
+cat > backend/.env.example << 'EOF'
+# Insight Hunter Backend Environment Variables
+
+JWT_SECRET=8cb92eb311e1a8106f160b01da419580707c8e5b225917dccdc5b211595f76cfe6c12c26ae9aa3859d358ea7a18183b6209673c9bbc90596d516e0a55b575f79
+
+ENVIRONMENT=development
+
+OPENAI_API_KEY=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
+
+PLAID_CLIENT_ID=68c4bf528556db00239ce6f7
+PLAID_SECRET=71236ab695ed329917e0c5d7a5c5c1
+PLAID_ENV=sandbox
+
+QUICKBOOKS_CLIENT_ID=ABPS7Aep1BnfaoU2qfJNmIfyL6WDbMQYMK7aLsHcVNXX8xoqso
+QUICKBOOKS_CLIENT_SECRET=rLkOP871mbgcv6GY1W3uJyXveBhpETzwYmx8SomT
+
+DATABASE_URL=insight_hunter_v2
+KV_NAMESPACE_ID=5d547bc308d1445d960d19636c589923
+R2_BUCKET_NAME=insight-hunter
+EOF
+
+# Frontend .env.example
+cat > frontend/.env.example << 'EOF'
+# Insight Hunter Frontend Environment Variables
+
+VITE_API_URL=http://localhost:8787
+VITE_ENVIRONMENT=development
+EOF
+
+# Add setup:env script to backend package.json
+jq '.scripts["setup:env"] = "cpy .env.example .env"' backend/package.json > backend/package.tmp.json && mv backend/package.tmp.json backend/package.json
+
+# Add setup:env script to frontend package.json
+jq '.scripts["setup:env"] = "cpy .env.example .env"' frontend/package.json > frontend/package.tmp.json && mv frontend/package.tmp.json frontend/package.json
+
+echo -e "${GREEN}✅ .env.example files created and setup:env script wired in!${NC}"
+echo -e "Run the following next:\n"
+echo -e "  cd backend && npm install && npm run setup:env"
+echo -e "  cd frontend && npm install && npm run setup:env"

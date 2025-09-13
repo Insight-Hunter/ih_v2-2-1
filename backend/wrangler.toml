@@ -1,0 +1,67 @@
+name = "insight-hunter-api"
+compatibility_date = "2024-01-15"
+main = "src/index.ts"
+
+[env.development]
+name = "insight-hunter-api-dev"
+
+[env.production]
+name = "insight-hunter-api-prod"
+
+[[d1_databases]]
+binding = "IH_DB"
+database_name = "insight-hunter-v2"
+database_id = "708836ad-602f-4f95-a6b5-cd31a7cd188d"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "5d547bc308d1445d960d19636c589923"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "insight-hunter-exports"
+
+[ai]
+binding = "AI"
+
+[vars]
+JWT_SECRET = "8cb92eb311e1a8106f160b1d41958078c7e5be5225917cdcd5b2115975af18c1c76c12c62ae9a3859d358ea7a18b862697c3c9bc996505d5e0a55b575f79"
+
+ENVIRONMENT = "development"
+
+OPENAI_API_KEY = "sk-proj-9h6khbcJhSMHwMhw1N0T-gmfaEEbbdsGWh5e5bBa1jNMwUJ3Hd1mWaj00eSaKb9Gf5lBOuaGT38bKf1JnVwQvtA1IG7cVqLsIXIyMKiWI178E9WgL4t8vxtMA"
+
+PLAID_CLIENT_ID = "68c4bf58255d5b8de239ce6f7"
+
+PLAID_CLIENT_SECRET = "71236a6ba659d29971e0c5d7a5c5c1"
+
+PLAID_ENV = "sandbox"
+
+QUICKBOOKS_CLIENT_ID = "ABP57Aep1BnfaoU2qFJ3mNfyl6WDdMQYMk7aLshCWXK8Xoqso"
+
+QUICKBOOKS_CLIENT_SECRET = "rLk0P87lmbgcv6GY1W3uJyXveBhpeTzwMxs8omT"
+
+EOF  
+
+# Backend TypeScript Configuration
+cat > backend/tsconfig.json << 'EOF'
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["@cloudflare/workers-types", "jest"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}
