@@ -2,11 +2,11 @@
   "name": "insight-hunter-api",
   "version": "1.0.0",
   "description": "AI-Powered Auto-CFO Platform API",
-  "main": "src/index.js",
-  "type": "commonjs",
+  "main": "src/index.ts",
+  "type": "es"
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node src/index.js",
+    "start": "node src/index.ts",
+    "dev": "node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "install:all": "npm install"
   },
